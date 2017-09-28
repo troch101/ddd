@@ -1,0 +1,1 @@
+function alertName(e){alert(e)}document.querySelector("h1").innerHTML="欢迎！！！！",alertName("hellodsdsds!"),console.log("oneone.js");

@@ -1,0 +1,190 @@
+什么是gulp
+
+	是一个前端自动化的构建工具，直白点说，如果没有这个工具，我们利用人工依旧可以压缩 css  压缩js  压缩图片  合并css合并js，处理前缀。	但是在项目逐渐庞大的时候，人工压缩不灵活并且效率低。
+	
+	这时候采用这个工具gulp，可以自动实现代码合并 代码牙压缩  代码合并、图片压缩、处理前缀。  js混淆。
+ 
+ 
+ 
+为什么要用gulp?
+	答：
+		1、gulp可以自动压缩 css、压缩js、合并css、合并js，压缩图片
+		2、效率提升：自动添加CSS3的vendor前缀；代码分析检查改正；
+	 	3.可以启动一个服务器环境  
+	 	
+			 	
+		项目要上线了： 
+			开发阶段写的css/js/html  -----> 文件体积比较大
+		
+		压缩后的体积，肯定比压缩前小很多
+		
+		把app.css ---> app.min.css 
+
+
+
+		html 
+			
+			reset.css 重置文件
+			app.css 里面就涵盖了所有页面的样式
+		
+			构建工具可以把上面的两个文件合并成1个文件 (优点：可以减少页面的Htttp请求)
+
+
+
+
+前端构建工具：(需要提前安装Node.js ) nodejs.org 
+
+
+grunt(out)  / gulp / webpack / yarn(新出的)
+
+
+
+
+Gulp: 
+
+	使用方式：
+		1. 下载： npm install gulp -g     -g一定要加，需要全局安装    只是让我们的电脑里面有gulp的一个运行环境  
+
+
+		2.  可以在项目里面来使用
+
+			如果项目里面是采用的构建工具，那么package.json这个文件一定要有！！！
+				1.手动创建package.json   不推荐
+
+				2. 自动创建 
+					执行命令： npm init     这条命令是帮助我们创建package.json的文件
+
+
+
+			11) 新建一个gulpfile.js   这个文件是gulp 的配置文件
+
+				注意： 在项目里面还需要安装一次gulp , 因为在项目里面需要用gulp 
+				执行的命令： npm install gulp --save-dev
+
+				--save-dev 这个参数意味着，gulp 是我们开发时候需要用到的插件 
+					会自动把插件名字添加到package.json里面去
+
+			22) 压缩css:
+				需要的插件： gulp-concat(是一个合并文件的插件) / gulp-rename(是一个更改文件名字的插件) / gulp-clean-css(是一个压缩css的插件) 
+
+				注意： 如果需要使用插件，首先下载你要用的插件！！！
+
+
+
+			注意： 如果想要一条命令，下载多个插件
+				npm install 插件名1 插件名2 ....   --save-dev 
+
+	
+	node_modules -----> 里面就存放着我们的插件文件
+
+
+构建工具，来压缩，打包，都是自动完成的。可以减少重复性的工作！！！
+
+
+
+	
+	使用步骤： 
+
+		1. 全局安装gulp :  npm install gulp -g   (只要之前执行过一次，后面就不需要执行了！！)
+
+		2. 准备一个项目
+
+		2.1   把cmd当前路径切换到项目的根目录
+
+		3. 初始化我们的package.json  
+			执行命令： npm init    。在输入相关的一些项目信息，就可以生成package.json文件
+
+		4. 我们就需要安装我们需要用到的插件：
+			执行命令： npm install gulp gulp-concat gulp-rename gulp-clean-css --save-dev 
+
+
+
+			如果要压缩js:
+				需要安装的插件： gulp-uglify 用来压缩js的
+				执行命令： npm install gulp-uglify --save-dev 
+
+
+			开启服务器环境：
+				需要安装的插件  gulp-connect 
+				下载： gulp-connect
+
+
+
+			1.上面命令执行完后，项目里面会自动生成一个文件夹: node_modules 
+			2.在Package.json文件里面，会自动添加插件名字 
+
+
+		5. 新建一个gulpfile.js 配置文件
+
+			写gulpfile.js配置文件：
+				 第一步，需要引入用到的插件
+					var gulp = require('gulp');
+
+
+				第二步，就可以创建任务：
+					//合并，压缩css
+					gulp.task('MiniCss', function(){
+
+						// 这一句是来指定源文件的
+						gulp.src('css/*.css')
+
+							//pipe管道的意思   指的是当前要做什么事情
+
+							//这一句是调用concat方法，里面放上文件合并后的文件名字
+							.pipe( concat('app.css'))
+
+							// 这一句在执行css压缩的插件的方法
+							.pipe( clean())
+
+							//这一句在执行修改名字
+							.pipe(rename({
+
+								// extname表示修改后缀名
+								extname: '.min.css'
+							}))
+
+							// 编译后的文件，要把他存到哪里去
+							// 如果输出的文件夹名字是不存在的，它会自动创建
+							.pipe(gulp.dest('dist/'))
+					})
+
+
+
+		6. 我们就可以来执行任务；  
+			输入命令： gulp MiniCss 
+
+			gulp 你要执行的task的名字 
+
+
+
+../  表示上一级目录
+./ 表示当前目录
+
+
+
+watch  用来监听文件的更改
+
+gulp.watch()
+
+	第一个参数： 可以是字符串或者是一个数组(数组是监听多个文件的)
+
+	第二个参数： 放的是任务名
+
+
+
+gulp-imagemin  压缩图片的插件  
+
+
+
+
+
+如果项目需要上传到公司的git服务器或者svn服务器上(包括你想把该文件传给你的小伙伴) ，那么我们一般不需要上传node_modules文件夹。
+只需要执行命令： npm install 
+
+
+README.md  里面就放上的是你的项目的介绍以及如何启动项目的步骤
+
+
+添加浏览器前缀的插件：  gulp-postcss 
+
+-----------------------------------------------------------------------------------------
